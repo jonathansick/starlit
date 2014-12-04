@@ -33,7 +33,7 @@ setup(
     description='Tools for working with astro literature databases',
     long_description=long_description,
     packages=find_packages(),
-    install_requires=['pytest'],
+    install_requires=['pytest', 'ads', 'bibtexparser'],
     url='https://github.com/jonathansick/starlit',
     classifiers=['Development Status :: 3 - Alpha',
                  'Programming Language :: Python',
