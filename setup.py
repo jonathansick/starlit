@@ -3,7 +3,7 @@
 
 import os
 import re
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def rel_path(path):
@@ -25,18 +25,16 @@ except IOError:
     long_description = ''
 
 setup(
-    name='paperweight',
+    name='starlit',
     version=get_version(),
     author='Jonathan Sick',
     author_email='jonathansick@mac.com',
-    license='BSD',
+    license='GPL',
     description='Tools for working with astro literature databases',
     long_description=long_description,
-    py_modules=['starlit'],
+    packages=find_packages(),
     install_requires=['pytest'],
     url='https://github.com/jonathansick/starlit',
-    download_url='',
-
     classifiers=['Development Status :: 3 - Alpha',
                  'Programming Language :: Python',
                  'Programming Language :: Python :: 2',
