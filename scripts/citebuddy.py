@@ -21,7 +21,9 @@ def main():
     bib_keys = doc.bib_keys
     bibdb = BibTexDB(doc.bib_path)
     for bib_key in bib_keys:
-        print(bibdb[bib_key].authors)
+        pub = bibdb[bib_key]
+        print(pub.bibcode)
+        print([a[0] for a in pub.authors])
 
 
 def parse_args():

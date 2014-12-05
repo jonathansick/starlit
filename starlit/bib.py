@@ -44,6 +44,15 @@ class BibTexPub(object):
         # return [parse_name(convert_to_unicode(a)) for a in author_list]
         return [parse_name(a) for a in author_list]
 
+    @property
+    def bibcode(self):
+        """The ADS bibcode for this publication."""
+        # Look for a bibcode in the records
+        # TODO throw exception if not found
+        # TODO make a resolver to check that it is a valid bibcode
+        if 'adsurl' in self._data:
+            return self._data['adsurl'].split('/')[-1]
+
 
 def convert_to_unicode(latex_str):
     """
