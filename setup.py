@@ -3,6 +3,7 @@
 
 import os
 import re
+import glob
 from setuptools import setup, find_packages
 
 
@@ -33,6 +34,7 @@ setup(
     description='Tools for working with astro literature databases',
     long_description=long_description,
     packages=find_packages(),
+    scripts=glob.glob(os.path.join('scripts', '*.py')),
     install_requires=['pytest', 'ads', 'bibtexparser'],
     url='https://github.com/jonathansick/starlit',
     classifiers=['Development Status :: 3 - Alpha',
