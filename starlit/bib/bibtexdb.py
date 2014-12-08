@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-Bibliographic Database Representations.
+Bibliographic database backed by a bibtex file.
 """
 
 import itertools
 
-import ads
-
 import bibtexparser
 from bibtexparser.latexenc import unicode_to_latex, unicode_to_crappy_latex1, \
     unicode_to_crappy_latex2
+
+from .adsdb import ADSBibDB
 
 
 class BibTexDB(object):
@@ -31,18 +31,18 @@ class BibTexPub(object):
     def __init__(self, pub_dict):
         super(BibTexPub, self).__init__()
         self._data = pub_dict
+        # FIXME does it make sense to embed a connection to ADSBibDB in
+        # each bibtex publication instance???
+        self._ads_db = ADSBibDB()
+        self._ads_pub = None
 
     def __getitem__(self, key):
         return self._data[key]
 
     def _get_ads_pub(self):
         """Get the representation for the publication via ADS."""
-        # FIXME Should this actually be a query of an ADSBibDB
-        # and return a ADSPub instance?
-        # FIXME is there a better API for getting a single pub?
         if self._ads_pub is None:
-            ads_query = ads.query(query=self.bibcode)
-            self._ads_pub = ads_query.next()
+            self._ads_pub = self._ads_db[self.bibcode]
         return self._ads_pub
 
     @property
