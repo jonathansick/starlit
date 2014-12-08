@@ -6,6 +6,8 @@ Bibliographic Database Representations.
 
 import itertools
 
+import ads
+
 import bibtexparser
 from bibtexparser.latexenc import unicode_to_latex, unicode_to_crappy_latex1, \
     unicode_to_crappy_latex2
@@ -33,6 +35,16 @@ class BibTexPub(object):
     def __getitem__(self, key):
         return self._data[key]
 
+    def _get_ads_pub(self):
+        """Get the representation for the publication via ADS."""
+        # FIXME Should this actually be a query of an ADSBibDB
+        # and return a ADSPub instance?
+        # FIXME is there a better API for getting a single pub?
+        if self._ads_pub is None:
+            ads_query = ads.query(query=self.bibcode)
+            self._ads_pub = ads_query.next()
+        return self._ads_pub
+
     @property
     def authors(self):
         """Parsed list of authors; each author is a ``(Last, First)`` tuple."""
@@ -52,6 +64,18 @@ class BibTexPub(object):
         # TODO make a resolver to check that it is a valid bibcode
         if 'adsurl' in self._data:
             return self._data['adsurl'].split('/')[-1]
+
+    @property
+    def references(self):
+        """Records of papers referenced by this publication."""
+        ads_pub = self._get_ads_pub()
+        return ads_pub.references
+
+    @property
+    def citations(self):
+        """Records of papers referenced by this publication."""
+        ads_pub = self._get_ads_pub()
+        return ads_pub.citations
 
 
 def convert_to_unicode(latex_str):

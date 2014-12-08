@@ -10,8 +10,6 @@ __license__ = "GPL"
 
 import argparse
 
-import ads
-
 import paperweight.document
 from starlit.bib import BibTexDB
 
@@ -28,10 +26,7 @@ def main():
         print([a[0] for a in pub.authors])
 
     test_pub = bibdb[bib_keys[0]]
-    ads_query = ads.query(query=test_pub.bibcode)
-    ads_pub = ads_query.next()  # should be a better API for getting single pub
-    print(ads_pub)
-    print(ads_pub.references)
+    print(test_pub.references)
 
 
 def parse_args():
