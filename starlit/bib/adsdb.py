@@ -23,16 +23,33 @@ ARXIV_PATTERN = re.compile('(\d{4,6}\.\d{4,6}|astro\-ph/\d{7})')
 
 
 class ADSBibDB(object):
-    """Bibliographic database derived from the NASA/SAO ADS API."""
-    def __init__(self):
+    """Bibliographic database derived from the NASA/SAO ADS API.
+
+    Parameters
+    ----------
+    cache : :class:`starlit.bib.adscache.ADSCacheDB`
+        A cache instance.
+    """
+    def __init__(self, cache=None):
         super(ADSBibDB, self).__init__()
+        self._ads_cache = cache
 
     def __getitem__(self, bibcode):
         """Access a paper given its bibcode."""
-        # TODO add caching here
-        # FIXME is there a better api for getting a single publication?
+        # grab from the cache
+        if self._ads_cache is not None:
+            if bibcode in self._ads_cache:
+                return self._ads_cache[bibcode]
+
+        # or query from ADS
         ads_query = ads.query(query=bibcode)
-        return ADSPub(ads_query.next())
+        pub = ADSPub(ads_query.next())
+
+        # cache it if we can
+        if self._ads_cache is not None:
+            self._ads_cache.insert(pub)
+
+        return pub
 
 
 class ADSPub(BasePub):
@@ -78,7 +95,6 @@ class ADSPub(BasePub):
     @property
     def references(self):
         """Publications referenced by this publication."""
-        # TODO could check a MongoDB cache here
         return [ADSPub(ref) for ref in self._article.references]
 
     @property
@@ -88,7 +104,6 @@ class ADSPub(BasePub):
     @property
     def citations(self):
         """Publications that cite this publication."""
-        # TODO could check a MongoDB cache here
         return [ADSPub(ref) for ref in self._article.citations]
 
     @property
