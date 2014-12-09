@@ -55,7 +55,10 @@ class ADSPub(BasePub):
     def title(self):
         """Title (unicode)"""
         # why does ads give the title as a list?
-        return self._article['title'][0]
+        try:
+            return self._article['title'][0]
+        except KeyError:
+            return None
 
     @property
     def abstract(self):
