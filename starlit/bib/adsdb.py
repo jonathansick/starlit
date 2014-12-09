@@ -82,10 +82,18 @@ class ADSPub(BasePub):
         return [ADSPub(ref) for ref in self._article.references]
 
     @property
+    def reference_bibcodes(self):
+        return self._article.references
+
+    @property
     def citations(self):
         """Publications that cite this publication."""
         # TODO could check a MongoDB cache here
         return [ADSPub(ref) for ref in self._article.citations]
+
+    @property
+    def citation_bibcodes(self):
+        return self._article.citations
 
     @property
     def doi(self):

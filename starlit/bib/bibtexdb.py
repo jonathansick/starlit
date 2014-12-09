@@ -74,10 +74,20 @@ class BibTexPub(BasePub):
         return ads_pub.references
 
     @property
+    def reference_bibcodes(self):
+        ads_pub = self._get_ads_pub()
+        return ads_pub.reference_bibcodes
+
+    @property
     def citations(self):
         """Records of papers referenced by this publication."""
         ads_pub = self._get_ads_pub()
         return ads_pub.citations
+
+    @property
+    def citation_bibcodes(self):
+        ads_pub = self._get_ads_pub()
+        return ads_pub.citation_bibcodes
 
     @property
     def doi(self):
