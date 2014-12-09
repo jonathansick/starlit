@@ -15,11 +15,12 @@ class ADSCacheDB(object):
 
     The cache is built around MongoDB.
     """
-    def __init__(self, host='localhost', port=27017):
+    def __init__(self, host='localhost', port=27017, ads_db=None):
         super(ADSCacheDB, self).__init__()
         client = MongoClient(host, port)
         db = client['starlit']
         self._c = db['cache']  # MongoDB collection
+        self._ads_db = ads_db
 
     def __contains__(self, bibcode):
         if self._c.find({"_id": bibcode}).count() > 0:
@@ -29,7 +30,7 @@ class ADSCacheDB(object):
 
     def __getitem__(self, bibcode):
         doc = self._c.find_one({"_id": bibcode})
-        return CachePub(doc)
+        return CachePub(doc, ads_db=self._ads_db)
 
     def insert(self, ads_pub):
         """Insert the ADSPub into the ADSCacheDB."""
@@ -52,9 +53,10 @@ class CachePub(BasePub):
     doc : object
         PyMongo document instance.
     """
-    def __init__(self, doc):
+    def __init__(self, doc, ads_db=None):
         super(CachePub, self).__init__()
         self._doc = doc
+        self._ads_db = ads_db
 
     @property
     def authors(self):
@@ -80,15 +82,23 @@ class CachePub(BasePub):
     def references(self):
         """Records of papers referenced by this publication."""
         bibcodes = self._doc['reference_bibcodes']
-        # FIXME actually generate paper instances from these bibcodes
-        return bibcodes
+        # FIXME might want rectify what should actually be returned
+        if self._ads_db is not None:
+            pubs = [self._ads_db[bibcode] for bibcode in bibcodes]
+            return pubs
+        else:
+            return bibcodes
 
     @property
     def citations(self):
         """Records of papers referenced by this publication."""
         bibcodes = self._doc['citation_bibcodes']
-        # FIXME actually generate paper instances from these bibcodes
-        return bibcodes
+        # FIXME might want to recify what should be returned if no ADS DB
+        if self._ads_db is not None:
+            pubs = [self._ads_db[bibcode] for bibcode in bibcodes]
+            return pubs
+        else:
+            return bibcodes
 
     @property
     def doi(self):
