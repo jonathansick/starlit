@@ -13,25 +13,27 @@ from .adsdb import ADSBibDB
 
 class BibTexDB(object):
     """Bibliographic Database derived from a bibtex file."""
-    def __init__(self, path):
+    def __init__(self, path, ads_cache=None):
         super(BibTexDB, self).__init__()
         self._filepath = path
         with open(path) as bibtex_file:
             bibtex_str = bibtex_file.read()
         self._db = bibtexparser.loads(bibtex_str)
+        self._ads_cache = ads_cache
 
     def __getitem__(self, bibkey):
-        return BibTexPub(self._db.entries_dict[bibkey])
+        return BibTexPub(self._db.entries_dict[bibkey],
+                         ads_cache=self._ads_cache)
 
 
 class BibTexPub(BasePub):
     """A publication backed by bibtex."""
-    def __init__(self, pub_dict):
+    def __init__(self, pub_dict, ads_cache=None):
         super(BibTexPub, self).__init__()
         self._data = pub_dict
         # FIXME does it make sense to embed a connection to ADSBibDB in
         # each bibtex publication instance???
-        self._ads_db = ADSBibDB()
+        self._ads_db = ADSBibDB(cache=ads_cache)
         self._ads_pub = None
 
     def __getitem__(self, key):
