@@ -31,6 +31,18 @@ class ADSCacheDB(object):
         doc = self._c.find_one({"_id": bibcode})
         return CachePub(doc)
 
+    def insert(self, ads_pub):
+        """Insert the ADSPub into the ADSCacheDB."""
+        # Form a document dictionary and insert into the DB
+        doc = {"_id": ads_pub.bibcode,
+               "authors": ads_pub.authors,
+               "title": ads_pub.title,
+               "abstract": ads_pub.abstract,
+               "arxiv_id": ads_pub.arxiv_id,
+               "reference_bibcodes": ads_pub.reference_bibcodes,
+               "citation_bibcodes": ads_pub.citation_bibcodes}
+        self._c.save(doc)
+
 
 class CachePub(BasePub):
     """A publication cached by ADSCacheDB (MongoDB).
@@ -62,7 +74,7 @@ class CachePub(BasePub):
     @property
     def bibcode(self):
         """The ADS bibcode for this publication."""
-        return self._doc['bibcode']
+        return self._doc['_id']
 
     @property
     def references(self):
