@@ -78,3 +78,21 @@ class BibTexPub(BasePub):
         """Records of papers referenced by this publication."""
         ads_pub = self._get_ads_pub()
         return ads_pub.citations
+
+    @property
+    def doi(self):
+        """DOI for paper."""
+        if 'doi' in self._data:
+            return self._data['doi']
+        else:
+            # FIXME should I throw an exception instead?
+            return None
+
+    @property
+    def arxiv_id(self):
+        """Arxiv identifier for article."""
+        print self._data.keys()
+        if 'eprint' in self._data:
+            eprint = self._data['eprint']
+            eprint = eprint.strip('arXiv:')
+            return eprint

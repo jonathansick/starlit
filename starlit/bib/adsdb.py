@@ -10,11 +10,16 @@ The intention is to have classes that the API of BibTexDB and BibTexPub.
 2014-12-07 - Created by Jonathan Sick
 """
 
+import re
+
 import ads
 
 # import texutils
 
 from .base import BasePub
+
+
+ARXIV_PATTERN = re.compile('(\d{4,6}\.\d{4,6}|astro\-ph/\d{7})')
 
 
 class ADSBibDB(object):
@@ -81,3 +86,19 @@ class ADSPub(BasePub):
         """Publications that cite this publication."""
         # TODO could check a MongoDB cache here
         return [ADSPub(ref) for ref in self._article.citations]
+
+    @property
+    def doi(self):
+        """DOI for paper."""
+        return self._article.doi[0]
+
+    @property
+    def arxiv_id(self):
+        """Arxiv identifier for article."""
+        # Find an arxiv ID out of the identifier fields
+        for ident in self._article.identifier:
+            # Test if arxiv ID in indent
+            arxiv_matches = ARXIV_PATTERN.findall(ident)
+            if len(arxiv_matches) == 1:
+                arxiv_id = arxiv_matches[0]
+                return arxiv_id

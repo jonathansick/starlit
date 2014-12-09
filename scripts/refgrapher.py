@@ -30,9 +30,11 @@ def main():
         print(pub.bibcode)
         print(pub.title)
         print([a[0] for a in pub.authors])
+        print(('doi', pub.doi))
+        print(('arxiv_id', pub.arxiv_id))
 
-    g = init_manuscript_graph(ref_pubs, depth=1)
-    print(nx.info(g))
+#     g = init_manuscript_graph(ref_pubs, depth=1)
+#     print(nx.info(g))
 
 
 def parse_args():
