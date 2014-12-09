@@ -99,7 +99,7 @@ class ADSPub(BasePub):
 
     @property
     def reference_bibcodes(self):
-        return self._article.references
+        return [pub.bibcode for pub in self._article.references]
 
     @property
     def citations(self):
@@ -108,7 +108,7 @@ class ADSPub(BasePub):
 
     @property
     def citation_bibcodes(self):
-        return self._article.citations
+        return [pub.bibcode for pub in self._article.citations]
 
     @property
     def doi(self):
