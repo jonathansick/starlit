@@ -48,6 +48,16 @@ class BibTexPub(object):
         return texutils.parse_bibtex_authors(self._data['author'])
 
     @property
+    def title(self):
+        """Title (unicode)"""
+        return texutils.convert_to_unicode(self._data['title'])
+
+    @property
+    def abstract(self):
+        """Abstract text (unicode)."""
+        return texutils.convert_to_unicode(self._data['abstract'])
+
+    @property
     def bibcode(self):
         """The ADS bibcode for this publication."""
         # Look for a bibcode in the records

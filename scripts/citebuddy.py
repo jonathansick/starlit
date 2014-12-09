@@ -23,10 +23,11 @@ def main():
     for bib_key in bib_keys:
         pub = bibdb[bib_key]
         print(pub.bibcode)
+        print(pub.title)
         print([a[0] for a in pub.authors])
 
-    test_pub = bibdb[bib_keys[0]]
-    print(test_pub.references)
+#     test_pub = bibdb[bib_keys[0]]
+#     print(test_pub.references)
 
 
 def parse_args():

@@ -50,6 +50,17 @@ class ADSPub(object):
         return authors
 
     @property
+    def title(self):
+        """Title (unicode)"""
+        # why does ads give the title as a list?
+        return self._article['title'][0]
+
+    @property
+    def abstract(self):
+        """Abstract text (unicode)."""
+        return self._article.abstract
+
+    @property
     def bibcode(self):
         """The ADS bibcode for this publication."""
         return self._article.bibcode
