@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-Suggest citations based on the references you've already made!
+Build the graph of papers referenced by your own manuscript.
 """
 
 __author__ = "Jonathan Sick"
