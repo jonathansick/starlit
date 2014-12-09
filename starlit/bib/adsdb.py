@@ -12,6 +12,8 @@ The intention is to have classes that the API of BibTexDB and BibTexPub.
 
 import ads
 
+# import texutils
+
 
 class ADSBibDB(object):
     """Bibliographic database derived from the NASA/SAO ADS API."""
@@ -37,6 +39,15 @@ class ADSPub(object):
     def __init__(self, ads_article):
         super(ADSPub, self).__init__()
         self._article = ads_article
+
+    @property
+    def authors(self):
+        """Parsed list of authors; each author is a ``(Last, First)`` tuple."""
+        authors = []
+        for a in authors:
+            a_last, a_first = a.split(',')
+            authors.append((a_last.strip(), a_first.strip()))
+        return authors
 
     @property
     def bibcode(self):
