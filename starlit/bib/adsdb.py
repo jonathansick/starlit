@@ -14,6 +14,8 @@ import ads
 
 # import texutils
 
+from .base import BasePub
+
 
 class ADSBibDB(object):
     """Bibliographic database derived from the NASA/SAO ADS API."""
@@ -28,7 +30,7 @@ class ADSBibDB(object):
         return ADSPub(ads_query.next())
 
 
-class ADSPub(object):
+class ADSPub(BasePub):
     """A publication record obtained from the NASA/SAO ADS API.
 
     Parameters

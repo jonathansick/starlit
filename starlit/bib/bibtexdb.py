@@ -7,6 +7,7 @@ Bibliographic database backed by a bibtex file.
 import bibtexparser
 from .. import texutils
 
+from .base import BasePub
 from .adsdb import ADSBibDB
 
 
@@ -23,7 +24,7 @@ class BibTexDB(object):
         return BibTexPub(self._db.entries_dict[bibkey])
 
 
-class BibTexPub(object):
+class BibTexPub(BasePub):
     """A publication backed by bibtex."""
     def __init__(self, pub_dict):
         super(BibTexPub, self).__init__()
