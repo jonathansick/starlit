@@ -68,9 +68,13 @@ class ADSPub(BasePub):
     def authors(self):
         """Parsed list of authors; each author is a ``(Last, First)`` tuple."""
         authors = []
-        for a in authors:
-            a_last, a_first = a.split(',')
-            authors.append((a_last.strip(), a_first.strip()))
+        for a in self._article.author:
+            try:
+                a_last, a_first = a.split(',')
+            except:
+                continue
+            else:
+                authors.append((a_last.strip(), a_first.strip()))
         return authors
 
     @property

@@ -90,6 +90,10 @@ class CachePub(BasePub):
             return bibcodes
 
     @property
+    def reference_bibcodes(self):
+        return self._doc['reference_bibcodes']
+
+    @property
     def citations(self):
         """Records of papers referenced by this publication."""
         bibcodes = self._doc['citation_bibcodes']
@@ -99,6 +103,10 @@ class CachePub(BasePub):
             return pubs
         else:
             return bibcodes
+
+    @property
+    def citation_bibcodes(self):
+        return self._doc['citation_bibcodes']
 
     @property
     def doi(self):
