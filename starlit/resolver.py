@@ -35,6 +35,8 @@ def resolve_bibitem(bibitem, referenced_pubs):
     """Returns the publication object for the first referenced publication
     whose bibliographic data matches to text in the bibitem.
 
+    .. note:: This is pretty hacky
+
     Parameters
     ----------
     bibitem : unicode
@@ -43,12 +45,15 @@ def resolve_bibitem(bibitem, referenced_pubs):
         List of publications referenced by the base document.
     """
     for pub in referenced_pubs:
-        for author in pub.authors:
+        if len(pub.authors) > 3:
+            authors = pub.authors[:3]
+        else:
+            authors = pub.authors
+        for author in authors:
             # author last names need to be in bibtem
             if author[0] not in bibitem:
                 continue
             return pub
-            # TODO add year matching, etc.
 
 
 def main():
