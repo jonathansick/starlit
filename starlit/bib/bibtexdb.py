@@ -42,6 +42,7 @@ class BibTexPub(BasePub):
     def _get_ads_pub(self):
         """Get the representation for the publication via ADS."""
         if self._ads_pub is None:
+            print "Getting ADSPub for", self.bibcode
             self._ads_pub = self._ads_db[self.bibcode]
         return self._ads_pub
 
@@ -67,7 +68,9 @@ class BibTexPub(BasePub):
         # TODO throw exception if not found
         # TODO make a resolver to check that it is a valid bibcode
         if 'adsurl' in self._data:
-            return self._data['adsurl'].split('/')[-1]
+            bibcode = self._data['adsurl'].split('/')[-1]
+            bibcode = bibcode.replace("%26", "&")
+            return bibcode
 
     @property
     def references(self):
