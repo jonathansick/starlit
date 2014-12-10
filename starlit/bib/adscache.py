@@ -36,12 +36,27 @@ class ADSCacheDB(object):
         """Insert the ADSPub into the ADSCacheDB."""
         # Form a document dictionary and insert into the DB
         doc = {"_id": ads_pub.bibcode,
-               "authors": ads_pub.authors,
-               "title": ads_pub.title,
-               "abstract": ads_pub.abstract,
-               "arxiv_id": ads_pub.arxiv_id,
-               "reference_bibcodes": ads_pub.reference_bibcodes,
-               "citation_bibcodes": ads_pub.citation_bibcodes}
+               "authors": ads_pub.authors}
+        try:
+            doc["title"] = ads_pub.title
+        except:
+            pass
+        try:
+            doc["abstract"] = ads_pub.abstract
+        except:
+            doc['abstract'] = None
+        try:
+            doc["arxiv_id"] = ads_pub.arxiv_id
+        except:
+            doc['arxiv_id'] = None
+        try:
+            doc["reference_bibcodes"] = ads_pub.reference_bibcodes
+        except:
+            doc["reference_bibcodes"] = None
+        try:
+            doc['citation_bibcodes'] = ads_pub.citation_bibcodes
+        except:
+            doc['citation_bibcodes'] = None
         self._c.save(doc)
 
 
