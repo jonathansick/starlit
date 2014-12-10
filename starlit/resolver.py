@@ -11,6 +11,26 @@ http://arxiv.org/abs/0912.5387
 """
 
 
+def extract_bibitem_bibkey(bibitem):
+    """Parse the bibkey in a bibkey"""
+    counter = -1
+    outer_counter = 0
+    bibkey = ""
+    for i, c in enumerate(bibitem):
+        if c == u'{':
+            counter += 1
+            if counter == 0:
+                outer_counter += 1
+        elif c == u'}':
+            counter -= 1
+        print i, c, counter, outer_counter
+
+        if outer_counter == 2:
+            bibkey += c
+    bibkey = bibkey.strip('{}')
+    return bibkey
+
+
 def resolve_bibitem(bibitem, referenced_pubs):
     """Returns the publication object for the first referenced publication
     whose bibliographic data matches to text in the bibitem.
@@ -37,14 +57,12 @@ def main():
     cachedb = ADSCacheDB(host='localhost', port=27017, ads_db=ADSBibDB())
     adsdb = ADSBibDB(cache=cachedb)
     # adsdb = ADSBibDB()
-    base_pub = adsdb['2007ApJ...667L..49D']
-    print(base_pub.reference_bibcodes)
-    # bibitem = "\bibitem[Berczik et al.(2006)]{BMSB06}Berczik, P., Merritt, D., Spurzem, R., \& Bischof, H.-P. 2006, \apj, 642, L21"
+    # base_pub = adsdb['2007ApJ...667L..49D']
+    # print(base_pub.reference_bibcodes)
     bibitem = "\bibitem[{{Fall} \& {Efstathiou}(1980)}]{FalEfs80}{Fall}, S.~M. \& {Efstathiou}, G. 1980, \mnras, 193, 189"
-    # bibkey, citation_str = parse_bibitem(bibitem)
-    # resolve_citation(bibkey, citation_str, None)
-    ref_pub = resolve_bibitem(bibitem, base_pub.references)
-    print("Matched", ref_pub.bibcode, ref_pub.authors)
+    # ref_pub = resolve_bibitem(bibitem, base_pub.references)
+    print("bibkey", extract_bibitem_bibkey(bibitem))
+    # print("Matched", ref_pub.bibcode, ref_pub.authors)
 
 
 if __name__ == '__main__':
