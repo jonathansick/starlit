@@ -86,5 +86,8 @@ class TexEncoder(object):
             latex commands.
         """
         for uc, ltx in self._unicode_latex.iteritems():
+            if ltx == ur'\textbackslash':
+                # FIXME Hack
+                continue
             txt = txt.replace(uc, ltx)
         return txt

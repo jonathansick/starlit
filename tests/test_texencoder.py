@@ -14,11 +14,11 @@ def encoder():
 
 
 def test_latex_unicode(encoder):
-    assert encoder.decode_latex(u"\&") == u"&"
+    assert encoder.decode_latex(ur"\&") == u"&"
 
 
 def test_unicode_latex(encoder):
-    assert encoder.encode_latex(u"&") == u"\&"
+    assert encoder.encode_latex(u"&") == ur"\&"
 
 
 def test_parse_name():
