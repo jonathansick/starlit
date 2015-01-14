@@ -35,6 +35,7 @@ class BibTexPub(BasePub):
         # each bibtex publication instance???
         self._ads_db = ADSBibDB(cache=ads_cache)
         self._ads_pub = None
+        self._encoder = texutils.TexEncoder()
 
     def __getitem__(self, key):
         return self._data[key]
@@ -54,12 +55,12 @@ class BibTexPub(BasePub):
     @property
     def title(self):
         """Title (unicode)"""
-        return texutils.convert_to_unicode(self._data['title'])
+        return self._encoder.decode_latex(self._data['title'])
 
     @property
     def abstract(self):
         """Abstract text (unicode)."""
-        return texutils.convert_to_unicode(self._data['abstract'])
+        return self._encoder.decode_latex(self._data['abstract'])
 
     @property
     def bibcode(self):

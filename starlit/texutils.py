@@ -5,11 +5,8 @@ Some badly coded utilities for converting latex/bibtex marked up text into
 unicode.
 """
 
-import itertools
-
-from bibtexparser.latexenc import unicode_to_latex, \
-    unicode_to_crappy_latex1, \
-    unicode_to_crappy_latex2
+from pkg_resources import resource_stream, resource_exists
+import xmltodict
 
 
 def parse_bibtex_authors(bibtex):
@@ -43,27 +40,70 @@ def parse_name(namestring):
     return parsed_name
 
 
-def convert_to_unicode(latex_str):
-    """
-    Convert accent from latex to unicode style.
+# TODO convert this to a singleton so it is not repeatedly re-initialized?
+class TexEncoder(object):
+    """Translate between unicode and latex."""
+    def __init__(self):
+        super(TexEncoder, self).__init__()
+        self._load_dataset()
 
-    Adapted from bibtexparser.
-    """
-    if '\\' in latex_str or '{' in latex_str:
-        for k, v in itertools.chain(unicode_to_crappy_latex1,
-                                    unicode_to_latex):
-            if v in latex_str:
-                latex_str = latex_str.replace(v, k)
+    def _load_dataset(self):
+        # Load XML
+        path = "../data/unicode.xml"
+        assert resource_exists(__name__, path)
+        with resource_stream(__name__, path) as fd:
+            d = xmltodict.parse(fd.read())
 
-        # If there is still very crappy items
-        if '\\' in latex_str:
-            for k, v in unicode_to_crappy_latex2:
-                if v in latex_str:
-                    parts = latex_str.split(str(v))
-                    for key, latex_str in enumerate(parts):
-                        if key+1 < len(parts) and len(parts[key+1]) > 0:
-                            # Change order to display accents
-                            parts[key] = parts[key] + parts[key+1][0]
-                            parts[key+1] = parts[key+1][1:]
-                    latex_str = k.join(parts)
-    return latex_str
+        # Build dictionaries mapping unicode to latex and vice versa
+        # TODO there is also a 'mathlatex' character set.
+        self._unicode_latex = {}
+        self._latex_unicode = {}
+        for char in d['charlist']['character']:
+            if 'latex' not in char:
+                continue
+            # This little base-16 magic convert unicode code points
+            # to unicode characters
+            try:
+                u = unichr(int(char['@id'][1:], 16))
+            except ValueError:
+                continue
+            self._unicode_latex[u] = char['latex']
+            self._latex_unicode[char['latex']] = u
+
+    def decode_latex(self, txt):
+        """Convert LaTeX entities in a block of text to unicode.
+
+        Parameters
+        ----------
+        txt : unicode
+            A block of text potentially containing latex entities.
+
+        Returns
+        -------
+        txt : unicode
+            A block of text with all latex entities hopefully converted to
+            unicode.
+        """
+        # FIXME potentially inefficient?
+        for ltx, uc in self._latex_unicode.iteritems():
+            txt = txt.replace(ltx, uc)
+        return txt
+
+    def encode_latex(self, txt):
+        """Convert unicode entities in a block of text to LaTeX commands
+        where possible.
+
+        Parameters
+        ----------
+        txt : unicode
+            A block of unicode text.
+
+        Returns
+        -------
+        txt : unicode
+            A block of text with unicode characters replaced with equivalent
+            latex commands.
+        """
+        for uc, ltx in self._unicode_latex.iteritems():
+            txt = txt.replace(uc, ltx)
+        return txt
