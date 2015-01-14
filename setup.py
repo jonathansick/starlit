@@ -4,7 +4,23 @@
 import os
 import re
 import glob
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Command
+
+
+class PyTest(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import sys
+        import subprocess
+        errno = subprocess.call([sys.executable, 'runtests.py'])
+        raise SystemExit(errno)
 
 
 def rel_path(path):
@@ -34,10 +50,13 @@ setup(
     description='Tools for working with astro literature databases',
     long_description=long_description,
     packages=find_packages(),
+    include_package_data=True,
     scripts=glob.glob(os.path.join('scripts', '*.py')),
+    cmdclass={'test': PyTest},
     install_requires=['pytest',
                       'ads',
                       'bibtexparser',
+                      'pymongo',
                       'xmltodict'],
     url='https://github.com/jonathansick/starlit',
     classifiers=['Development Status :: 3 - Alpha',
