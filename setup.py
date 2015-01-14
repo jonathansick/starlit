@@ -50,6 +50,7 @@ setup(
     description='Tools for working with astro literature databases',
     long_description=long_description,
     packages=find_packages(),
+    package_data={'starlit': ['data/unicode.xml']},
     include_package_data=True,
     scripts=glob.glob(os.path.join('scripts', '*.py')),
     cmdclass={'test': PyTest},

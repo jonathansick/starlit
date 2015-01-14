@@ -30,7 +30,7 @@ class TexEncoder(object):
 
     def _load_dataset(self):
         # Load XML
-        path = "../data/unicode.xml"
+        path = "data/unicode.xml"
         assert resource_exists(__name__, path)
         with resource_stream(__name__, path) as fd:
             d = xmltodict.parse(fd.read())
