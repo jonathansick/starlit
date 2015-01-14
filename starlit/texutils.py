@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-Some badly coded utilities for converting latex/bibtex marked up text into
-unicode.
+Utilities for working LaTeX and unicode markup.
 """
 
 from pkg_resources import resource_stream, resource_exists
@@ -16,28 +15,10 @@ def parse_bibtex_authors(bibtex):
     return [parse_name(a) for a in author_list]
 
 
-def parse_name(namestring):
-    """Make people names as tuples of (surname, firstnames)
-    or surname, initials.
-
-    Adapted from bibtexparser
-    """
-    if ',' in namestring:
-        namesplit = namestring.split(',', 1)
-        last = namesplit[0].strip()
-        firsts = [i.strip() for i in namesplit[1].split()]
-    else:
-        namesplit = namestring.split()
-        last = namesplit.pop()
-        firsts = [i.replace('.', '. ').strip() for i in namesplit]
-    if last in ['jnr', 'jr', 'junior']:
-        last = firsts.pop()
-    for item in firsts:
-        if item in ['ben', 'van', 'der', 'de', 'la', 'le']:
-            last = firsts.pop() + ' ' + last
-    last = last.strip(u"{}")  # FIXME seems like bibtexparser should do this
-    parsed_name = (last, ' '.join(firsts))
-    return parsed_name
+def parse_name(namestr):
+    # namestr = namestr.replace(u"{}", u"")
+    parts = namestr.split(u",", 1)
+    return (parts[0].strip(u"{}"), u" ".join(parts[1:]).strip())
 
 
 # TODO convert this to a singleton so it is not repeatedly re-initialized?
