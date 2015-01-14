@@ -1,7 +1,10 @@
 starlit
 =======
 
-Package for working with astronomy literature databases: ADS, arXiv and your bibtex file.
+Starlit is a python package for working with astronomy literature databases interchangeably: ADS, arXiv and your bibtex file.
+Starlit will even cache your ADS requests to MongoDB.
+
+Starlit was created as part of .Astronomy 6 (Chicago, 2014).
 
 ------------
 
